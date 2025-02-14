@@ -2,7 +2,6 @@ import { Keypair } from "@solana/web3.js"
 import * as bip39 from "bip39"
 import { derivePath } from "ed25519-hd-key"
 import bs58 from "bs58"
-
 const seedPhrase = process.env.SEED_PHRASE!
 
 async function getKeypairFromSeedPhrase(seedPhrase: string) {
@@ -20,5 +19,4 @@ async function getKeypairFromSeedPhrase(seedPhrase: string) {
 	const keypair = await getKeypairFromSeedPhrase(seedPhrase)
 	console.log("Public Key:", keypair.publicKey.toBase58())
 	console.log("Private Key (Base58):", bs58.encode(keypair.secretKey))
-})
-()
+})()
