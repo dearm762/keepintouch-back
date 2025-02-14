@@ -3,8 +3,8 @@ import { getKeys, isValidSeedPhrase } from "@/actions/seed.actions"
 import { decrypt, encrypt } from './encrypt.actions'
 import { getSeedPhrase, storeSeedPhrase } from './walletdb.actions'
 import { useRouter } from 'next/navigation'
-
 const SEEDPHRASE = process.env.NEXT_PUBLIC_SEED_PHRASE!
+
 export function useAuth() {
 	const [seedPhrase, setSeedPhrase] = useState<Array<string>>(SEEDPHRASE.split(" "))  // Array(12).fill("") in production
 	const [error, setError] = useState("")
