@@ -1,12 +1,10 @@
-import { useAuth, useIsAuthorized } from '@/actions/auth'
+import { useAuth } from '@/actions/auth.actions'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 export default function SeedPhraseForm() {
 	const { seedPhrase, handleInputChange, handleSubmit, isValid, error } = useAuth()
-
-	
 
 	return (
 		<div className="w-full max-w-2xl bg-white shadow-md rounded-lg p-6">
@@ -37,7 +35,7 @@ export default function SeedPhraseForm() {
 				) : (
 					<p className="text-yellow-600 mt-4">⚠️ Invalid Seed Phrase</p>
 				)}
-				<Button type="submit" className="w-full mt-6">
+				<Button type="submit" className="w-full mt-6" disabled={!isValid}>
 					Submit Seed Phrase
 				</Button>
 			</form>

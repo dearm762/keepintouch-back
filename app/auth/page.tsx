@@ -1,7 +1,7 @@
 'use client'
 
+import { useIsAuthorized } from '@/actions/auth.actions'
 import { useRouter } from 'next/navigation'
-import { useIsAuthorized } from '@/actions/auth'
 import SeedPhraseForm from '@/components/seed-phrase-form'
 
 export default function AuthPage() {
