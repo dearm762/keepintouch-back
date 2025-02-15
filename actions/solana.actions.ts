@@ -1,22 +1,29 @@
-import { Keypair } from "@solana/web3.js"
-import * as bip39 from "bip39"
-import { derivePath } from "ed25519-hd-key"
-import bs58 from "bs58"
-const seedPhrase = process.env.SEED_PHRASE!
+import { clusterApiUrl, Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js"
+import { useKeys } from "./auth.actions"
+import { useEffect, useState } from "react"
 
-async function getKeypairFromSeedPhrase(seedPhrase: string) {
-	if (!seedPhrase) throw new Error("Seed phrase is required.")
-		
-	const seed = await bip39.mnemonicToSeed(seedPhrase)
-	const derivationPath = "m/44'/501'/0'/0'"
-	const derivedSeed = derivePath(derivationPath, seed.toString("hex")).key
-	const keypair = Keypair.fromSeed(derivedSeed)
-	return keypair
+const SOLANA_RPC_URL = "https://api.mainnet-beta.solana.com"
+
+export function useSolanaBalance() {
+	const [solanaBalance, setSolanaBalance] = useState<number | null>(null)
+	const { publicKey } = useKeys()
+
+	useEffect(() => {
+		if (!publicKey) return
+		const fetchBalance = async () => {
+			try {
+				const connection = new Connection(clusterApiUrl("testnet"), "confirmed")
+				const pubKey = new PublicKey(publicKey)
+				const balanceInLamports = await connection.getBalance(pubKey)
+				const balanceInSol = balanceInLamports / LAMPORTS_PER_SOL
+				setSolanaBalance(balanceInSol)
+			} catch (error) {
+				console.error("Failed to fetch Solana balance:", error)
+				setSolanaBalance(null)
+			}
+		}
+		fetchBalance()
+	}, [publicKey])
+
+	return { solanaBalance } as const
 }
-
-(
-	async () => {
-	const keypair = await getKeypairFromSeedPhrase(seedPhrase)
-	console.log("Public Key:", keypair.publicKey.toBase58())
-	console.log("Private Key (Base58):", bs58.encode(keypair.secretKey))
-})()

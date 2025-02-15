@@ -1,19 +1,18 @@
 'use client'
 
-import { useKeys } from '@/actions/auth.actions'
-import QRCode from '@/components/qr-code'
-import { Button } from '@/components/ui/button'
 import { ArrowLeftRight, DollarSign, QrCode as QRCodeIcon, Send, History } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import { useSolanaBalance } from '@/actions/solana.actions'
 
 export default function HomePage() {
-  const { publicKey, privateKey, error, seedPhrase } = useKeys()
   const router = useRouter()
+  const { solanaBalance } = useSolanaBalance()
 
   return (
     <>
       <div className='max-w-screen-sm mx-auto min-h-screen flex flex-col'>
-        <h2 className='font-semibold text-5xl my-10 text-center'>122$</h2>
+        <h2 className='font-semibold text-5xl my-10 text-center'>0$</h2>
         <div className='flex gap-5 justify-center'>
           <Button className='flex flex-col h-20 w-20' onClick={() => router.push('/receive')}>
             <QRCodeIcon size={30} />
@@ -36,11 +35,15 @@ export default function HomePage() {
             History
           </Button>
         </div>
-        {/* { publicKey } */}
-        {privateKey}
-        {/* { seedPhrase } */}
-        {/* { error } */}
-        {publicKey && <QRCode publicKey={publicKey} />}
+
+        <div>
+          <h2>Solana Balance</h2>
+          {solanaBalance !== null ? (
+            <p>Balance: {solanaBalance} SOL</p>
+          ) : (
+            <p>Loading balance...</p>
+          )}
+        </div>
       </div>
     </>
   )
